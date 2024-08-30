@@ -6,14 +6,14 @@ function utils.round(number)
 end
 
 function utils.loadOptions(modName)
-  local file = os.getenv("MODS_OPTIONS_FILE")
-
-  if modName == nil then
-    modName = utils.getModName()
-  end
+  local file = os.getenv("MODS_OPTIONS_FILE") or MODS_OPTIONS_FILE
 
   if file == nil then
     file = "options.lua"
+  end
+
+  if modName == nil then
+    modName = utils.getModName()
   end
 
   utils.printf("Load options file: %s\\%s", modName, file)
