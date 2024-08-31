@@ -1,22 +1,51 @@
+---@class Mod
+---@field name string
+---@field file string
+---@field currentDirectory string
+---@field modsDirectory string
+Mod = {}
+
 local utils = {}
+
+---@return Mod
+function utils.init()
+  ---@class Mod
+  local mod = {
+    name = debug.getinfo(2, "S").source:match("@?.+\\Mods\\([^\\]+)"),
+    file = debug.getinfo(2, 'S').source:sub(2),
+    currentDirectory = debug.getinfo(2, "S").source:match("@?(.+)\\"),
+    modsDirectory = debug.getinfo(2, "S").source:match("@?(.+\\Mods)\\")
+  }
+
+  return mod
+end
+
+function utils.patch(object, options)
+  for k, v in pairs(options) do
+    if options[k] ~= nil then
+      object[k] = v
+      if object[k] ~= v then
+        utils.error(string.format(
+          "Unable to set property: '%s' to '%s'.\nObject full name: %s", k,
+          object:GetFName():ToString(), object:GetFullName()))
+      end
+    end
+  end
+end
 
 function utils.round(number)
   local power = 10 ^ 2
   return math.floor(number * power) / power
 end
 
-function utils.loadOptions(modName)
+function utils.loadOptions()
   local file = os.getenv("MODS_OPTIONS_FILE") or MODS_OPTIONS_FILE
 
   if file == nil then
     file = "options.lua"
   end
 
-  if modName == nil then
-    modName = utils.getModName()
-  end
-
-  local path = string.format("%s\\%s\\%s", utils.getModsDirectory(), modName, file)
+  local path = string.format("%s\\%s\\%s", Mod.modsDirectory, Mod.name, file)
   utils.printf("Load options file: " .. path)
   dofile(path)
 end
@@ -43,22 +72,6 @@ function utils.isFileExists(filename)
   end
 end
 
-function utils.getModsDirectory()
-  return debug.getinfo(2, "S").source:match("@?(.+\\Mods)\\")
-end
-
-function utils.getModName()
-  return debug.getinfo(2, "S").source:match("@?.+\\Mods\\([^\\]+)")
-end
-
-function utils.getCurrentDirectory()
-  return debug.getinfo(2, "S").source:match("@?(.+)\\")
-end
-
-function utils.__FILE__()
-  return debug.getinfo(2, 'S').source
-end
-
 function utils.printTable(table)
   local str = "{\n"
 
@@ -80,15 +93,19 @@ function utils.__NAME__()
 end
 
 function utils.print(msg)
-  print("[" .. utils.getModName() .. "] " .. msg .. "\n")
+  print("[" .. Mod.name .. "] " .. msg .. "\n")
 end
 
 function utils.printf(...)
-  print("[" .. utils.getModName() .. "] " .. string.format(...) .. "\n")
+  print("[" .. Mod.name .. "] " .. string.format(...) .. "\n")
 end
 
-function utils.err(msg)
-  print(debug.traceback(msg, 2))
+function utils.error(msg, level)
+  error("[" .. Mod.name .. "] " .. msg .. "\n", level)
+end
+
+function utils.getTraceback(msg)
+  return debug.traceback(msg, 2)
 end
 
 function utils.dbg(msg)
