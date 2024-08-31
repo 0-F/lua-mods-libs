@@ -16,8 +16,9 @@ function utils.loadOptions(modName)
     modName = utils.getModName()
   end
 
-  utils.printf("Load options file: %s\\%s", modName, file)
-  dofile(string.format("%s\\%s\\%s", utils.getModsDirectory(), modName, file))
+  local path = string.format("%s\\%s\\%s", utils.getModsDirectory(), modName, file)
+  utils.printf("Load options file: " .. path)
+  dofile(path)
 end
 
 function utils.getFileList(directory, filter)
