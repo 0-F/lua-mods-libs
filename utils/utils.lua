@@ -24,13 +24,33 @@ function utils.patch(object, options)
   for k, v in pairs(options) do
     if options[k] ~= nil then
       object[k] = v
-      if object[k] ~= v then
-        utils.error(string.format(
-          "Unable to set property: '%s' to '%s'.\nObject full name: %s", k,
-          object:GetFName():ToString(), object:GetFullName()))
+
+      local isEqual
+      if type(object[k]) == "number" or type(v) == "number" then
+        isEqual = utils.isAlmostEqual(object[k], v)
+      else
+        isEqual = object[k] ~= v
+      end
+
+      if not isEqual then
+        local msg = string.format("Unable to edit variable value: `%s.%s`.\n", object:GetFName():ToString(), k)
+        msg = msg .. string.format("Actual: %s\n", object[k])
+        msg = msg .. string.format("Expected: %s\n", v)
+        msg = msg .. string.format("Object full name: %s\n", object:GetFullName())
+        msg = msg .. utils.getTraceback()
+
+        utils.error(msg)
       end
     end
   end
+end
+
+function utils.isAlmostEqual(number1, number2, threshold)
+  if threshold == nil then
+    threshold = 0.000001
+  end
+
+  return math.abs(number1 - number2) <= threshold
 end
 
 function utils.round(number)
