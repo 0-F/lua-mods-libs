@@ -14,6 +14,7 @@ __LOGGER = {}
 ---@field name string The name of the mod.
 ---@field file string
 ---@field currentDirectory string
+---@field currentModDirectory string
 ---@field modsDirectory string
 
 ---@class (exact) Mod_Options

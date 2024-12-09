@@ -46,6 +46,7 @@ function M.getModInfo(info)
     name = source:match("@?.+\\Mods\\([^\\]+)"),
     file = source:sub(2),
     currentDirectory = source:match("@?(.+)\\"),
+    currentModDirectory = source:match("@?(.+\\Mods\\[^\\]+)"),
     modsDirectory = source:match("@?(.+\\Mods)\\")
   }
 end
