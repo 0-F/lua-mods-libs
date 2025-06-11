@@ -57,7 +57,7 @@ end
 ---@return Mod_Logger
 function logging.new(level, levelForFatalError)
     local logger = {} ---@type Mod_Logger
-    local source = debug.getinfo(2, "S").source
+    local source = debug.getinfo(2, "S").source:gsub("\\", "/")
 
     -- previous values
     local prevLevel ---@type _LogLevel?
@@ -65,11 +65,11 @@ function logging.new(level, levelForFatalError)
 
     ---@type Mod_ModInfo
     local mod = {
-        name = source:match("@?.+\\Mods\\([^\\]+)"),
+        name = source:match("@?.+/Mods/([^/]+)"),
         file = source:sub(2),
-        currentDirectory = source:match("@?(.+)\\"),
-        currentModDirectory = source:match("@?(.+\\Mods\\[^\\]+)"),
-        modsDirectory = source:match("@?(.+\\Mods)\\")
+        currentDirectory = source:match("@?(.+)/"),
+        currentModDirectory = source:match("@?(.+/Mods/[^/]+)"),
+        modsDirectory = source:match("@?(.+/Mods)/")
     }
 
     ---@param newlevel? _LogLevel
@@ -120,8 +120,9 @@ function logging.new(level, levelForFatalError)
 
                 logger[funcName] = function(value, ...)
                     local info = debug.getinfo(2, "nSl")
+                    local src = info.source:gsub("\\", "/")
                     local dbgMsg = fmt("[%s] %s ", mod.name, levelName) ..
-                        info.source:gsub(".+\\", "") .. ":" ..
+                        src:gsub(".+/", "") .. ":" ..
                         (info.name or "*") .. ":" ..
                         info.currentline .. " "
 
