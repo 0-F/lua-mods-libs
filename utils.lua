@@ -361,7 +361,7 @@ end
 function M.getFileList(directory, filter)
   local fileList = {}
 
-  for fileName in io.popen(string.format('dir "%s" /B /D /S', directory)):lines() do
+  for fileName in io.popen(string.format('dir "%s" /B /S', directory)):lines() do
     if fileName:match(filter) then
       table.insert(fileList, fileName)
     end
