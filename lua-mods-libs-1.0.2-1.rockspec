@@ -1,7 +1,7 @@
 package = "lua-mods-libs"
 version = "1.0.2-1"
 source = {
-   url = "https://github.com/0-F/lua-mods-libs.git"
+   url = "git+https://github.com/0-F/lua-mods-libs.git"
 }
 description = {
    summary = "lua-mods-libs",
