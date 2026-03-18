@@ -14,7 +14,7 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      ["lua-mods-libs.logging"] = "lua-mods-libs/logging.lua",
-      ["lua-mods-libs.utils"] = "lua-mods-libs/utils.lua"
+      ["lua-mods-libs.logging"] = "logging.lua",
+      ["lua-mods-libs.utils"] = "utils.lua"
    }
 }
