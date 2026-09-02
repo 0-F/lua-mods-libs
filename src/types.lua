@@ -68,6 +68,14 @@ function logger.fatal(value, ...) end
 ---@param newLevelForFatalError? _LogLevel
 function logger.setLevel(newLevel, newLevelForFatalError) end
 
+---@param isEnabled boolean
+function logger.setFunctionCallLogging(isEnabled) end
+
+---@param tbl table
+---@param logLevelToDisplay? string
+---@return table
+function logger.wrapFunctionsWithCallLogging(tbl, logLevelToDisplay) end
+
 --------------------------------------------------------------------------------
 --#region Fixes things from UE4SS Types.lua
 
@@ -82,6 +90,7 @@ function FName.ToString() end
 ---Returns the FName of this object by copy
 ---All FNames returned by `__index` are returned by reference
 ---@return FName
+---@diagnostic disable-next-line: undefined-global
 function UObject:GetFName() end
 
 --[[ original
